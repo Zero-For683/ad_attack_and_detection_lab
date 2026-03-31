@@ -1,0 +1,60 @@
+<group name="windows,attack,credential-access,kerberos">
+
+  <rule id="100100" level="12">
+    <if_sid>60103</if_sid>
+    <field name="win.system.eventID">^4769$</field>
+    <field name="win.eventdata.ticketEncryptionType">^0x17$</field>
+    <description>Kerberoasting detected: RC4 ticket requested for $(win.eventdata.serviceName) by $(win.eventdata.targetUserName)</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+  </rule>
+
+  <rule id="100101" level="14">
+    <if_sid>60103</if_sid>
+    <field name="win.system.eventID">^4768$</field>
+    <field name="win.eventdata.preAuthType">^0$</field>
+    <description>AS-REP Roasting detected: Pre-auth not required for $(win.eventdata.targetUserName)</description>
+    <mitre>
+      <id>T1558.004</id>
+    </mitre>
+  </rule>
+
+  <rule id="100102" level="14">
+    <if_sid>60103</if_sid>
+    <field name="win.system.eventID">^4662$</field>
+    <field name="win.eventdata.properties">1131f6aa-9c07-11d1-f79f-00c04fc2dcd2|1131f6ad-9c07-11d1-f79f-00c04fc2dcd2</field>
+    <description>DCSync attack detected: Directory replication requested by $(win.eventdata.subjectUserName)</description>
+    <mitre>
+      <id>T1003.006</id>
+    </mitre>
+  </rule>
+
+  <rule id="100103" level="12" frequency="5" timeframe="60">
+    <if_matched_sid>60122</if_matched_sid>
+    <field name="win.eventdata.logonType">^3$</field>
+    <description>Password spray detected: repeated failed NTLM/network logons observed within 60 seconds</description>
+    <mitre>
+      <id>T1110.003</id>
+    </mitre>
+  </rule>
+
+  <rule id="100104" level="12" frequency="5" timeframe="60">
+    <if_matched_sid>60104</if_matched_sid>
+    <field name="win.system.eventID">^4771$</field>
+    <description>Kerberos password spray detected: repeated pre-auth failures observed within 60 seconds</description>
+    <mitre>
+      <id>T1110.003</id>
+    </mitre>
+  </rule>
+
+  <rule id="100105" level="12">
+    <if_sid>92652</if_sid>
+    <field name="win.eventdata.targetUserName">^ANONYMOUS LOGON$</field>
+    <description>Pass-the-Hash detected: suspicious NTLM remote logon by $(win.eventdata.targetUserName) from $(win.eventdata.ipAddress)</description>
+    <mitre>
+      <id>T1550.002</id>
+    </mitre>
+  </rule>
+
+</group>
